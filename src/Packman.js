@@ -9,11 +9,14 @@
         var constructor = entities.constructor;
         var modules = entities.modules;
 
-        delete entities.constructor;
-        delete entities.modules;
+		if (constructor.name === 'Object') {
+			constructor = null;
+		}
+        constructor && delete entities.constructor;
+        modules && delete entities.modules;
 
         /** Create constructor object */
-        var Func = new Function('return function ' + name + '(c,m){this.modules=m;return c&&c.call(this)||this}')();
+        var Func = new Function('return function ' + name + '(c,m){this.modules=m;console.log(c);return c&&c.call(this)||this}')();
 
         (Func.prototype = entities).constructor = Func;
 
@@ -90,9 +93,12 @@
         var modules = entities.modules;
         var inherit = entities.inherit;
 
-        delete entities.constructor;
-        delete entities.modules;
-        delete entities.inherit;
+		if (constructor.name === 'Object') {
+			constructor = null;
+		}
+        constructor && delete entities.constructor;
+        modules && delete entities.modules;
+        inherit && delete entities.inherit;
 
         entities.__initClass = initClass;
         classes[name] = new Function(
@@ -137,7 +143,6 @@
             var list = this.list;
 
             for (var i = 0, val; val = list[i]; i++) {
-                console.log(val, val.constructor.name, name);
                 if (val.constructor.name === name) {
                     return val;
                 }
